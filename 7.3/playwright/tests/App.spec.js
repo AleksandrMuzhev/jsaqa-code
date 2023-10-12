@@ -41,4 +41,28 @@ describe("Authorization", async ({ page }) => {
     const expectedText = "Вы ввели неправильно логин или пароль";
     expect(textError).toBe(expectedText);
   });
+  test("Failed Authorization Screnshots", async ({ page }) => {
+    const mail =
+      "#__next > div:nth-child(2) > div > div > div.modal_container__yO5GZ > div.modal_content__Flhjj > div.styles_root__l6N51 > div > form > div:nth-child(1) > input[type=email]";
+    const security =
+      "#__next > div:nth-child(3) > div > div > div.modal_container__yO5GZ > div.modal_content__Flhjj > div.styles_root__l6N51 > div > form > div:nth-child(3) > input";
+    const button =
+      "#__next > div:nth-child(3) > div > div > div.modal_container__yO5GZ > div.modal_content__Flhjj > div.styles_root__l6N51 > div > form > button";
+    await page.goto("https://netology.ru/?modal=sign_in");
+    await page.screenshot({ path: "./screenshots/screenshot.png" });
+    await page.fill(mail, "test@123.ru");
+    await page.screenshot({ path: "./screenshots/screenshot2.png" });
+    await page.fill(security, "11111");
+    await page.screenshot({ path: "./screenshots/screenshot3.png" });
+    await page.click(button);
+    await page.screenshot({ path: "./screenshots/screenshot4.png" });
+    const error =
+      "#__next > div:nth-child(3) > div > div > div.modal_container__yO5GZ > div.modal_content__Flhjj > div.styles_root__l6N51 > div > form > div.Input_root__VNG5T.Input_size-m__VJJaZ.Input_fluid__Cycj8.Input_error__WgHA7 > div";
+    await page.waitForSelector(error, { timeout: 2000 });
+    await page.screenshot({ path: "./screenshots/screenshot5.png" });
+    const textError = await page.$eval(error, (element) => element.textContent);
+    const expectedText = "Вы ввели неправильно логин или пароль";
+    expect(textError).toBe(expectedText);
+    await page.screenshot({ path: "./screenshots/screenshot6.png" });
+  });
 });
