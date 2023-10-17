@@ -10,16 +10,25 @@ afterEach(() => {
 });
 
 describe("Github page tests", () => {
+  jest.setTimeout(10000);
   test("The h1 header content'", async () => {
     const firstLink = await page.$("header div div a");
     await firstLink.click();
-    await page.waitForSelector('h1');
-    const title2 = await page.title();
-    expect(title2).toEqual('GitHub: Where the world builds software · GitHub');
+    const pageDescriptor = await page.waitForSelector(
+      ".home-campaign-hero div.col-11 > h1"
+    );
+    const actualOriginal = await page.evaluate(
+      (el) => el.textContent,
+      pageDescriptor
+    );
+    const actual = actualOriginal.replace(/\s+/g, " ").trim();
+    const expectedOriginal = "Let’s build from here";
+    const expected = expectedOriginal.replace(/\s+/g, " ").trim();
+    expect(actual).toEqual(expected);
   });
 
   test("The first link attribute", async () => {
-    const actual = await page.$eval("a", link => link.getAttribute('href') );
+    const actual = await page.$eval("a", (link) => link.getAttribute("href"));
     expect(actual).toEqual("#start-of-content");
   });
 
@@ -28,7 +37,7 @@ describe("Github page tests", () => {
     await page.waitForSelector(btnSelector, {
       visible: true,
     });
-    const actual = await page.$eval(btnSelector, link => link.textContent);
-    expect(actual).toContain("Sign up for free")
+    const actual = await page.$eval(btnSelector, (link) => link.textContent);
+    expect(actual).toContain("Get started with Team");
   });
 });
